@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CNC Gabinetry</title>
+  <style>
+    body {
+      background-color: #e6f0ff;
+      font-family: 'Segoe UI', sans-serif;
+      color: #003366;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #0055aa;
+    }
+
+    .contenedor {
+      background-color: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      margin: 20px auto;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    img {
+      width: 100%;
+      max-width: 100%;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 2px solid #cce0ff;
+    }
+
+    input, button {
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .galeria {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      padding: 10px;
+    }
+
+    .item-galeria {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 10px;
+      width: 160px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .item-galeria img {
+      width: 100%;
+      border-radius: 6px;
+    }
+
+    .item-galeria p {
+      margin: 5px 0 0;
+      font-size: 14px;
+      text-align: center;
+      color: #003366;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>CNC Gabinetry</h1>
+  <div class="contenedor">
+
+    <input type="text" id="nombre" placeholder="Escribe tu nombre">
+
+    <label for="archivo">Sube una foto:</label>
+    <input type="file" id="archivo" accept="image/*" onchange="mostrarFotoSubida(event)">
+
+    <img id="imagenMostrada" alt="Imagen mostrada aquí">
+
+    <button onclick="enviarFoto()">📤 Enviar a Galería</button>
+  </div>
+
+  <h2>🖼 Galería</h2>
+  <div class="galeria" id="galeria"></div>
+
+  <script>
+    const imagenMostrada = document.getElementById('imagenMostrada');
+    const nombreInput = document.getElementById('nombre');
+    const galeria = document.getElementById('galeria');
+
+    let imagenActual = '';
+
+    function mostrarFotoSubida(event) {
+      const archivo = event.target.files[0];
+      if (archivo) {
+        const lector = new FileReader();
+        lector.onload = function(e) {
+          imagenMostrada.src = e.target.result;
+          imagenActual = e.target.result;
+        };
+        lector.readAsDataURL(archivo);
+      }
+    }
+
+    function obtenerFechaHoraActual() {
+      const ahora = new Date();
+      const fecha = ahora.toLocaleDateString();
+      const hora = ahora.toLocaleTimeString();
+      return `${fecha} ${hora}`;
+    }
+
+    function enviarFoto() {
+      const nombre = nombreInput.value.trim();
+      if (!imagenActual) {
+        alert("Por favor sube una foto primero.");
+        return;
+      }
+
+      const div = document.createElement('div');
+      div.className = 'item-galeria';
+
+      const img = document.createElement('img');
+      img.src = imagenActual;
+
+      const pNombre = document.createElement('p');
+      pNombre.textContent = nombre ? nombre : 'Sin nombre';
+
+      const pFecha = document.createElement('p');
+      pFecha.textContent = obtenerFechaHoraActual();
+
+      div.appendChild(img);
+      div.appendChild(pNombre);
+      div.appendChild(pFecha);
+      galeria.appendChild(div);
+
+      // Limpiar
+      imagenMostrada.src = '';
+      imagenActual = '';
+      nombreInput.value = '';
+    }
+  </script>
+
+</body>
+</html>
